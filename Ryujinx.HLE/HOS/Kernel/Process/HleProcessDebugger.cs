@@ -15,7 +15,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
         private KProcess _owner;
 
-        private class Image
+        public class Image
         {
             public ulong BaseAddress { get; }
 
@@ -153,7 +153,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             return false;
         }
 
-        private Image GetImage(ulong address, out int index)
+        public Image GetImage(ulong address, out int index)
         {
             lock (_images)
             {

@@ -4,11 +4,11 @@ using System.Threading;
 
 namespace ARMeilleure.Translation
 {
-    class TranslatedFunction
+    public class TranslatedFunction
     {
         private const int MinCallsForRejit = 100;
 
-        private readonly GuestFunction _func; // Ensure that this delegate will not be garbage collected.
+        public readonly GuestFunction _func; // Ensure that this delegate will not be garbage collected.
 
         private int _callCount;
 

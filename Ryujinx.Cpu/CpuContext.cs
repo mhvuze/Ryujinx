@@ -1,11 +1,12 @@
 ﻿using ARMeilleure.State;
 using ARMeilleure.Translation;
+using System;
 
 namespace Ryujinx.Cpu
 {
     public class CpuContext
     {
-        private readonly Translator _translator;
+        public Translator _translator;
 
         public CpuContext(MemoryManager memory)
         {

@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace ARMeilleure.State
 {
-    class NativeContext : IDisposable
+    public class NativeContext : IDisposable
     {
-        private unsafe struct NativeCtxStorage
+        public unsafe struct NativeCtxStorage
         {
             public fixed ulong X[RegisterConsts.IntRegsCount];
             public fixed ulong V[RegisterConsts.VecRegsCount * 2];

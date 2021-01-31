@@ -1,6 +1,6 @@
 namespace ARMeilleure.IntermediateRepresentation
 {
-    enum RegisterType
+    public enum RegisterType
     {
         Integer,
         Vector,

@@ -10,6 +10,7 @@ using Ryujinx.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Ryujinx.HLE.HOS.Kernel.Process
@@ -69,6 +70,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
         private ulong _mainThreadStackSize;
         private ulong _memoryUsageCapacity;
         private int _version;
+        private MHRiseHook _mhrise_hook;
 
         public KHandleTable HandleTable { get; private set; }
 
@@ -108,6 +110,8 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             _threads = new LinkedList<KThread>();
 
             Debugger = new HleProcessDebugger(this);
+
+            _mhrise_hook = new MHRiseHook();
         }
 
         public KernelResult InitializeKip(
@@ -127,6 +131,8 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             AddressSpaceType addrSpaceType = (AddressSpaceType)((int)(creationInfo.Flags & ProcessCreationFlags.AddressSpaceMask) >> (int)ProcessCreationFlags.AddressSpaceShift);
 
             InitializeMemoryManager(creationInfo.Flags);
+
+            _mhrise_hook.Initialize(Context as ArmProcessContext);
 
             bool aslrEnabled = creationInfo.Flags.HasFlag(ProcessCreationFlags.EnableAslr);
 
