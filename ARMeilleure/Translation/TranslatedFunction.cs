@@ -11,14 +11,16 @@ namespace ARMeilleure.Translation
         public Counter<uint> CallCounter { get; }
         public ulong GuestSize { get; }
         public bool HighCq { get; }
+        public bool IsHook { get; }
         public IntPtr FuncPtr { get; }
 
-        public TranslatedFunction(GuestFunction func, Counter<uint> callCounter, ulong guestSize, bool highCq)
+        public TranslatedFunction(GuestFunction func, Counter<uint> callCounter, ulong guestSize, bool highCq, bool isHook = false)
         {
             _func = func;
             CallCounter = callCounter;
             GuestSize = guestSize;
             HighCq = highCq;
+            IsHook = isHook;
             FuncPtr = Marshal.GetFunctionPointerForDelegate(func);
         }
 
