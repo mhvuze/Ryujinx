@@ -14,13 +14,15 @@ namespace ARMeilleure.Translation
 
         public ulong GuestSize { get; }
         public bool HighCq { get; }
+        public bool IsHook { get; }
         public IntPtr FuncPtr { get; }
 
-        public TranslatedFunction(GuestFunction func, ulong guestSize, bool highCq)
+        public TranslatedFunction(GuestFunction func, ulong guestSize, bool highCq, bool isHook = false)
         {
             _func = func;
             GuestSize = guestSize;
             HighCq = highCq;
+            IsHook = isHook;
             FuncPtr = Marshal.GetFunctionPointerForDelegate(func);
         }
 

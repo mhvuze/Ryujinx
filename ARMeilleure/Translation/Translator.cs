@@ -11,7 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Reflection;
 using System.Runtime;
 using System.Threading;
 
@@ -131,6 +131,8 @@ namespace ARMeilleure.Translation
 
                     backgroundTranslatorThread.Start();
                 }
+
+                InstallWatchers();
             }
 
             Statistics.InitializeTimer();
@@ -449,6 +451,167 @@ namespace ARMeilleure.Translation
             }
 
             _backgroundTranslatorLock.ReleaseWriterLock();
+        }
+
+        private MHRiseHooks _hooks;
+
+        private void InstallWatchers()
+        {
+            _hooks = new MHRiseHooks(_memory);
+
+            AddWatcher(0x8004000 + 0x4af6c70, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.CalculateHashHook)), _hooks);
+        }
+
+        public void AddWatcher(ulong address, MethodInfo meth, object instance = null)
+        {
+            bool isReplacement = false;
+
+            GuestFunction funcDlg;
+
+            if (!isReplacement)
+            {
+                TranslatedFunction funcToCall = GetOrTranslate(address, ExecutionMode.Aarch64);
+
+                if (funcToCall.IsHook)
+                {
+                    return;
+                }
+
+                funcDlg = BuildWatcher(funcToCall, meth, instance);
+            }
+            else
+            {
+                funcDlg = BuildWatcher(null, meth, instance);
+            }
+
+            TranslatedFunction func = new TranslatedFunction(funcDlg, 0UL, true, true);
+
+            _funcs.AddOrUpdate(address, func, (key, oldFunc) => func);
+        }
+
+        private GuestFunction BuildWatcher(TranslatedFunction func, MethodInfo meth, object instance)
+        {
+            EmitterContext context = new EmitterContext();
+
+            ParameterInfo[] callbackArgs = meth.GetParameters();
+
+            Operand arg0 = context.LoadArgument(OperandType.I64, 0);
+
+            Operand[] args = new Operand[callbackArgs.Length];
+
+            int retValueArgIndex = -1;
+
+            void SetArgument(int index, int regIndex)
+            {
+                OperandType type = GetOperandType(callbackArgs[index].ParameterType);
+
+                RegisterType regType = type.IsInteger()
+                    ? RegisterType.Integer
+                    : RegisterType.Vector;
+
+                long offset = NativeContext.GetRegisterOffset(new Register(regIndex, regType));
+
+                Operand value = context.Load(type, context.Add(arg0, Const(offset)));
+
+                args[index] = value;
+            }
+
+            int intRegisters = 0, vecRegisters = 0;
+
+            for (int index = 0; index < callbackArgs.Length; index++)
+            {
+                OperandType type = GetOperandType(callbackArgs[index].ParameterType);
+
+                var retValueAttr = callbackArgs[index].GetCustomAttribute(typeof(ReturnValueAttribute));
+
+                if (retValueAttr != null)
+                {
+                    retValueArgIndex = index;
+
+                    continue;
+                }
+
+                int regIndex = type.IsInteger() ? intRegisters++ : vecRegisters++;
+
+                SetArgument(index, regIndex);
+            }
+
+            Operand x0;
+
+            if (func != null)
+            {
+                Operand retVal = context.Call(Const(func.FuncPtr.ToInt64()), OperandType.I64, arg0);
+
+                if (retValueArgIndex != -1)
+                {
+                    SetArgument(retValueArgIndex, 0);
+                }
+
+                x0 = context.Call(meth, instance, args);
+
+                context.Return(retVal);
+            }
+            else
+            {
+                x0 = context.Call(meth, instance, args);
+
+                long offset = NativeContext.GetRegisterOffset(new Register(30, RegisterType.Integer));
+
+                Operand value = context.Load(OperandType.I64, context.Add(arg0, Const(offset)));
+
+                context.Return(value);
+            }
+
+            // Write back the return value of the hook function.
+            if (x0 != null)
+            {
+                long offset = NativeContext.GetRegisterOffset(new Register(0, x0.Type.ToRegisterType()));
+
+                context.Store(context.Add(arg0, Const(offset)), x0);
+            }
+
+            OperandType[] argTypes = new OperandType[] { OperandType.I64 };
+
+            return Compiler.Compile<GuestFunction>(
+                context.GetControlFlowGraph(),
+                argTypes,
+                OperandType.I64,
+                CompilerOptions.HighCq);
+        }
+
+        private static Dictionary<TypeCode, OperandType> _typeCodeToOperandTypeMap =
+                   new Dictionary<TypeCode, OperandType>()
+        {
+            { TypeCode.Boolean, OperandType.I32  },
+            { TypeCode.Byte,    OperandType.I32  },
+            { TypeCode.Char,    OperandType.I32  },
+            { TypeCode.Double,  OperandType.FP64 },
+            { TypeCode.Int16,   OperandType.I32  },
+            { TypeCode.Int32,   OperandType.I32  },
+            { TypeCode.Int64,   OperandType.I64  },
+            { TypeCode.SByte,   OperandType.I32  },
+            { TypeCode.Single,  OperandType.FP32 },
+            { TypeCode.UInt16,  OperandType.I32  },
+            { TypeCode.UInt32,  OperandType.I32  },
+            { TypeCode.UInt64,  OperandType.I64  }
+        };
+
+        private static OperandType GetOperandType(Type type)
+        {
+            if (_typeCodeToOperandTypeMap.TryGetValue(Type.GetTypeCode(type), out OperandType ot))
+            {
+                return ot;
+            }
+            else if (type == typeof(V128))
+            {
+                return OperandType.V128;
+            }
+            else if (type == typeof(void))
+            {
+                return OperandType.None;
+            }
+
+            throw new ArgumentException($"Invalid type \"{type.Name}\".");
         }
     }
 }
