@@ -84,6 +84,15 @@ namespace ARMeilleure.Translation
             return Add(Instruction.ByteSwap, Local(op1.Type), op1);
         }
 
+        public Operand Call(MethodInfo meth, object instance, params Operand[] callArgs)
+        {
+            IntPtr ptr = MethodHelpers.GetFunctionPointerForNativeCode(meth, instance);
+
+            OperandType returnType = GetOperandType(meth.ReturnType);
+
+            return Call(Const(ptr.ToInt64()), returnType, callArgs);
+        }
+
         public Operand Call(MethodInfo info, params Operand[] callArgs)
         {
             if (Ptc.State == PtcState.Disabled)
