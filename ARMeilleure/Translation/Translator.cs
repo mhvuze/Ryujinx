@@ -133,6 +133,8 @@ namespace ARMeilleure.Translation
                 }
 
                 InstallWatchers();
+
+                MHRiseHooks.LoadFileList();
             }
 
             Statistics.InitializeTimer();
@@ -459,10 +461,9 @@ namespace ARMeilleure.Translation
         {
             _hooks = new MHRiseHooks(_memory);
 
-            //AddWatcher(0x8004000 + 0x4af6c70, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.CalculateHashHook)), _hooks);
-            //AddWatcher(0x8004000 + 0x4BA5F70, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.HookViaMurmurHashCalc32)), _hooks);
-            //AddWatcher(0x8004000 + 0x4BCC620, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.Strings_ulong_ulong)), _hooks); 4BD0E40
-            //AddWatcher(0x8004000 + 0x4BD7FB0, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.FileRelatedMurmurHash)), _hooks);
+            //AddWatcher(0x8004000 + 0x4af6c70, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.CalculateHashHook)), _hooks); // demo v1.0.0
+            //AddWatcher(0x8004000 + 0x4BA5F70, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.HookViaMurmurHashCalc32)), _hooks); // demo v1.0.0
+            AddWatcher(0x8004000 + 0x4C113E0, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.FileRelatedMurmurHash)), _hooks); // demo v1.0.0: 0x4BD7FB0, demo v1.0.2: 0x4C113E0
         }
 
         public void AddWatcher(ulong address, MethodInfo meth, object instance = null)

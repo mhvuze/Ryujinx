@@ -24,6 +24,8 @@ namespace ARMeilleure.Translation.PTC
 {
     public static class Ptc
     {
+        private static ulong MHRiseFileHookAddress = 0x8004000 + 0x4C113E0;
+
         private const string HeaderMagicString = "PTChd\0\0\0";
 
         private const uint InternalVersion = 1990; //! To be incremented manually for each change to the ARMeilleure project.
@@ -541,6 +543,11 @@ namespace ARMeilleure.Translation.PTC
                 {
                     InfoEntry infoEntry = ReadInfo(infosReader);
 
+                    if (infoEntry.Address == MHRiseFileHookAddress)
+                    {
+                        Logger.Error?.Print(LogClass.Ptc, $"MH Rise file hashing function caught during load (address: 0x{infoEntry.Address:X16}). Purge the PPTC cache.");
+                    }
+
                     if (infoEntry.Stubbed)
                     {
                         SkipCode(infoEntry.CodeLen);
@@ -800,6 +807,12 @@ namespace ARMeilleure.Translation.PTC
                 while (profiledFuncsToTranslate.TryDequeue(out var item))
                 {
                     ulong address = item.address;
+
+                    if (address == MHRiseFileHookAddress)
+                    {
+                        Logger.Info?.Print(LogClass.Ptc, $"MH Rise file hashing function skipped during translation (address: 0x{address:X16})");
+                        continue;
+                    }
 
                     Debug.Assert(PtcProfiler.IsAddressInStaticCodeRange(address));
 

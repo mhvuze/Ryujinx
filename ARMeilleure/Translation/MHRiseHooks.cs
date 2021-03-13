@@ -1,5 +1,10 @@
 using ARMeilleure.Memory;
+using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ARMeilleure.Translation
 {
@@ -60,31 +65,35 @@ namespace ARMeilleure.Translation
                 }
             }
 
-            //Logger.Info?.Print(LogClass.Cpu, $"{fileName}, 0x{output:X16}");
-            Logger.Info?.Print(LogClass.Cpu, $"0x{ptr:X16}, 0x{output:X16}");
+            string newFileName = fileName.Replace("rom:/", "").Replace("/", "\\");
+            //if (!fileList.Any(newFileName.Contains))
+            //Logger.Info?.Print(LogClass.Cpu, $"New file found: {fileName}, 0x{output:X16}");
+            fileList.Add(newFileName);
         }
 
-        public void Strings_ulong_ulong([ReturnValue] ulong output, ulong ptr)
+        public static List<string> fileList = new List<string>();
+        public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
+
+        public static void LoadFileList()
         {
-            string fileName = string.Empty;
+            DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
+            logDir.Create();
 
-            if (ptr != 0UL)
-            {
-                ulong offset = 0;
-                while (true)
-                {
-                    ushort value = _memory.Read<ushort>(ptr + offset);
-                    if (value == 0)
-                    {
-                        break;
-                    }
+            if (!File.Exists(fileListPath)) File.Create(fileListPath);
 
-                    fileName += (char)value;
-                    offset += 2;
-                }
-            }
+            fileList = new List<string>(File.ReadAllLines(fileListPath));
+            Logger.Info?.Print(LogClass.Cpu, $"Loaded {fileListPath} with {fileList.Count} entries.");
+        }
 
-            Logger.Info?.Print(LogClass.Cpu, $"{fileName}, 0x{output:X16}");
+        public static void SaveFileList()
+        {
+            DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
+            logDir.Create();
+
+            fileList = fileList.Distinct().ToList();
+
+            File.WriteAllLines(fileListPath, fileList);
+            Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
         }
     }
 }
