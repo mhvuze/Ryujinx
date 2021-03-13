@@ -132,6 +132,8 @@ namespace ARMeilleure.Translation
                 }
 
                 InstallWatchers();
+
+                MHRiseHooks.LoadFileList();
             }
 
             Statistics.InitializeTimer();
@@ -456,7 +458,7 @@ namespace ARMeilleure.Translation
         {
             _hooks = new MHRiseHooks(_memory);
 
-            AddWatcher(0x8004000 + 0x4af6c70, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.CalculateHashHook)), _hooks);
+            AddWatcher(MHRiseHooks.MHRiseFileHookAddress, typeof(MHRiseHooks).GetMethod(nameof(MHRiseHooks.FileRelatedMurmurHash)), _hooks);
         }
 
         public void AddWatcher(ulong address, MethodInfo meth, object instance = null)

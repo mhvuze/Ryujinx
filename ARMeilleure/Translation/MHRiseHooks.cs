@@ -1,10 +1,17 @@
 using ARMeilleure.Memory;
 using Ryujinx.Common.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ARMeilleure.Translation
 {
     class MHRiseHooks
     {
+        // demo v1.0.0: 0x4BD7FB0, demo v1.0.2: 0x4C113E0
+        public static ulong MHRiseFileHookAddress = 0x8004000 + 0x4C113E0;
+
         private readonly IMemoryManager _memory;
 
         public MHRiseHooks(IMemoryManager memory)
@@ -12,16 +19,16 @@ namespace ARMeilleure.Translation
             _memory = memory;
         }
 
-        public void CalculateHashHook([ReturnValue] ulong hash, ulong param1, ulong param2, ulong fileNamePtr)
+        public void FileRelatedMurmurHash([ReturnValue] ulong output, ulong ptr)
         {
             string fileName = string.Empty;
 
-            if (fileNamePtr != 0UL)
+            if (ptr != 0UL)
             {
                 ulong offset = 0;
                 while (true)
                 {
-                    ushort value = _memory.Read<ushort>(fileNamePtr + offset);
+                    ushort value = _memory.Read<ushort>(ptr + offset);
                     if (value == 0)
                     {
                         break;
@@ -32,7 +39,34 @@ namespace ARMeilleure.Translation
                 }
             }
 
-            Logger.Info?.Print(LogClass.Cpu, $"Calculate hash called, FileName = {fileName}, Hash = 0x{hash:X16}");
+            string newFileName = fileName.Replace("rom:/", "").Replace("/", "\\");
+            //Logger.Info?.Print(LogClass.Cpu, $"{fileName}, 0x{output:X16}");
+            fileList.Add(newFileName);
+        }
+
+        public static List<string> fileList = new List<string>();
+        public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
+        public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
+
+        public static void LoadFileList()
+        {
+            if (!logDir.Exists) logDir.Create();
+
+            if (File.Exists(fileListPath))
+            {
+                fileList = new List<string>(File.ReadAllLines(fileListPath));
+                Logger.Info?.Print(LogClass.Cpu, $"Loaded {fileListPath} with {fileList.Count} entries.");
+            }
+        }
+
+        public static void SaveFileList()
+        {
+            if (!logDir.Exists) logDir.Create();
+
+            fileList = fileList.Distinct().ToList();
+
+            File.WriteAllLines(fileListPath, fileList);
+            Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
         }
     }
 }

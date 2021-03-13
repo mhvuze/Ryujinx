@@ -541,6 +541,11 @@ namespace ARMeilleure.Translation.PTC
                 {
                     InfoEntry infoEntry = ReadInfo(infosReader);
 
+                    if (infoEntry.Address == MHRiseHooks.MHRiseFileHookAddress)
+                    {
+                        Logger.Error?.Print(LogClass.Ptc, $"MH Rise file hashing function caught during load (address: 0x{infoEntry.Address:X16}). Purge the PPTC cache.");
+                    }
+
                     if (infoEntry.Stubbed)
                     {
                         SkipCode(infoEntry.CodeLen);
@@ -783,6 +788,12 @@ namespace ARMeilleure.Translation.PTC
                 while (profiledFuncsToTranslate.TryDequeue(out var item))
                 {
                     ulong address = item.address;
+
+                    if (address == MHRiseHooks.MHRiseFileHookAddress)
+                    {
+                        Logger.Info?.Print(LogClass.Ptc, $"MH Rise file hashing function skipped during translation (address: 0x{address:X16})");
+                        continue;
+                    }
 
                     Debug.Assert(PtcProfiler.IsAddressInStaticCodeRange(address));
 

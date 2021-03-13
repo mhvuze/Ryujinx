@@ -247,6 +247,8 @@ namespace ARMeilleure.Translation.PTC
         {
             _waitEvent.Reset();
 
+            MHRiseHooks.SaveFileList();
+
             string fileNameActual = string.Concat(Ptc.CachePathActual, ".info");
             string fileNameBackup = string.Concat(Ptc.CachePathBackup, ".info");
 
