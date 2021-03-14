@@ -1,9 +1,13 @@
 using ARMeilleure.Memory;
+using Dropbox.Api;
+using Dropbox.Api.Files;
 using Ryujinx.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ARMeilleure.Translation
 {
@@ -53,8 +57,11 @@ namespace ARMeilleure.Translation
         public static List<string> fileListAddons = new List<string>();
 
         public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
-        public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.txt");
+        public static string fileListNameAddons = $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.txt";
+        public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", fileListNameAddons);
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
+
+        public static DropboxClient dbx = new DropboxClient("YOUR ACCESS TOKEN");
 
         public static void LoadFileList()
         {
@@ -76,6 +83,7 @@ namespace ARMeilleure.Translation
 
             File.WriteAllLines(fileListPath, fileList);
             File.WriteAllLines(fileListPathAddons, fileListAddons);
+            dbx.Files.UploadAsync($"mhrise/{fileListNameAddons}", WriteMode.Overwrite.Instance, body: new MemoryStream(Encoding.UTF8.GetBytes(fileListPathAddons)));
 
             Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
             Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPathAddons} with {fileListAddons.Count} entries.");
