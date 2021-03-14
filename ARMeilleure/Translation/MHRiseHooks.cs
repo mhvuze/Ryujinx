@@ -41,11 +41,19 @@ namespace ARMeilleure.Translation
 
             string newFileName = fileName.Replace("rom:/", "").Replace("/", "\\");
             //Logger.Info?.Print(LogClass.Cpu, $"{fileName}, 0x{output:X16}");
-            fileList.Add(newFileName);
+
+            if (!fileList.Contains(newFileName))
+            {
+                fileList.Add(newFileName);
+                fileListAddons.Add(newFileName);
+            }
         }
 
         public static List<string> fileList = new List<string>();
+        public static List<string> fileListAddons = new List<string>();
+
         public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
+        public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd-hh:mm:ss")}.list");
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
 
         public static void LoadFileList()
@@ -64,9 +72,13 @@ namespace ARMeilleure.Translation
             if (!logDir.Exists) logDir.Create();
 
             fileList = fileList.Distinct().ToList();
+            fileListAddons = fileListAddons.Distinct().ToList();
 
             File.WriteAllLines(fileListPath, fileList);
+            File.WriteAllLines(fileListPathAddons, fileListAddons);
+
             Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
+            Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPathAddons} with {fileListAddons.Count} entries.");
         }
     }
 }
