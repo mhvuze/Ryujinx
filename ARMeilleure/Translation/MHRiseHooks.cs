@@ -53,7 +53,7 @@ namespace ARMeilleure.Translation
         public static List<string> fileListAddons = new List<string>();
 
         public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
-        public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd-hh:mm:ss")}.list");
+        public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.txt");
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
 
         public static void LoadFileList()
