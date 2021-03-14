@@ -79,14 +79,16 @@ namespace ARMeilleure.Translation
             if (!logDir.Exists) logDir.Create();
 
             fileList = fileList.Distinct().ToList();
-            fileListAddons = fileListAddons.Distinct().ToList();
-
             File.WriteAllLines(fileListPath, fileList);
-            File.WriteAllLines(fileListPathAddons, fileListAddons);
-            dbx.Files.UploadAsync($"mhrise/{fileListNameAddons}", WriteMode.Overwrite.Instance, body: new MemoryStream(Encoding.UTF8.GetBytes(fileListPathAddons)));
-
             Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
-            Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPathAddons} with {fileListAddons.Count} entries.");
+
+            if (fileListAddons.Count > 0)
+            {
+                fileListAddons = fileListAddons.Distinct().ToList();
+                File.WriteAllLines(fileListPathAddons, fileListAddons);
+                dbx.Files.UploadAsync($"/logs/{fileListNameAddons}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(fileListPathAddons)));
+                Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPathAddons} with {fileListAddons.Count} entries.");
+            }
         }
     }
 }
