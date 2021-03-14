@@ -61,7 +61,7 @@ namespace ARMeilleure.Translation
         public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", fileListNameAddons);
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
 
-        public static DropboxClient dbx = new DropboxClient("YOUR ACCESS TOKEN");
+        public static DropboxClient dbx = new DropboxClient(Keys.Keys.DropboxAppKey);
 
         public static void LoadFileList()
         {
