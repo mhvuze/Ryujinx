@@ -55,6 +55,7 @@ namespace ARMeilleure.Translation
 
         public static List<string> fileList = new List<string>();
         public static List<string> fileListAddons = new List<string>();
+        public static int fileListAddonsCountOld = 0;
 
         public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
         public static string fileListNameAddons = $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.txt";
@@ -78,17 +79,19 @@ namespace ARMeilleure.Translation
         {
             if (!logDir.Exists) logDir.Create();
 
-            fileList = fileList.Distinct().ToList();
-            File.WriteAllLines(fileListPath, fileList);
-            Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
-
-            if (fileListAddons.Count > 0)
+            if (fileListAddons.Count > fileListAddonsCountOld)
             {
+                fileList = fileList.Distinct().ToList();
+                File.WriteAllLines(fileListPath, fileList);
+                Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPath} with {fileList.Count} entries.");
+
                 fileListAddons = fileListAddons.Distinct().ToList();
                 File.WriteAllLines(fileListPathAddons, fileListAddons);
                 dbx.Files.UploadAsync($"/logs/{fileListNameAddons}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(fileListPathAddons)));
                 Logger.Info?.Print(LogClass.Cpu, $"Saved {fileListPathAddons} with {fileListAddons.Count} entries.");
             }
+
+            fileListAddonsCountOld = fileListAddons.Count;
         }
     }
 }
