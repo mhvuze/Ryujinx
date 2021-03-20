@@ -11,6 +11,9 @@ namespace Ryujinx.Ui
     public enum HotkeyButtons
     {
         ToggleVSync = 1 << 0,
+        ScanAmiiboMagnamalo = 1 << 1,
+        ScanAmiiboPalamute = 1 << 2,
+        ScanAmiiboPalico = 1 << 3
     }
 
     public class KeyboardController
@@ -106,6 +109,21 @@ namespace Ryujinx.Ui
             if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ToggleVsync])
             {
                 buttons |= HotkeyButtons.ToggleVSync;
+            }
+
+            if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboMagnamalo])
+            {
+                buttons |= HotkeyButtons.ScanAmiiboMagnamalo;
+            }
+
+            if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalamute])
+            {
+                buttons |= HotkeyButtons.ScanAmiiboPalamute;
+            }
+
+            if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalico])
+            {
+                buttons |= HotkeyButtons.ScanAmiiboPalico;
             }
 
             return buttons;
