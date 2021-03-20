@@ -50,7 +50,7 @@ namespace Ryujinx.Ui
 
         private UserChannelPersistence _userChannelPersistence;
 
-        private HLE.Switch _emulationContext;
+        public static HLE.Switch _emulationContext;
 
         private WindowsMultimediaTimerResolution _windowsMultimediaTimerResolution;
 
