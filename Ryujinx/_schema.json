@@ -1431,7 +1431,10 @@
       "type": "object",
       "title": "Hotkey Controls",
       "required": [
-        "toggle_vsync"
+        "toggle_vsync",
+        "scan_amiibo_magnamalo",
+        "scan_amiibo_palamute",
+        "scan_amiibo_palico"
       ],
       "properties": {
         "toggle_vsync": {
@@ -1439,6 +1442,24 @@
           "$ref": "#/definitions/key",
           "title": "Toggle VSync",
           "default": "Tab"
+        },
+        "scan_amiibo_magnamalo": {
+          "$id": "#/properties/hotkeys/properties/scan_amiibo_magnamalo",
+          "$ref": "#/definitions/key",
+          "title": "Scan Magnamalo Amiibo",
+          "default": "Keypad0"
+        },
+        "scan_amiibo_palamute": {
+          "$id": "#/properties/hotkeys/properties/scan_amiibo_palamute",
+          "$ref": "#/definitions/key",
+          "title": "Scan Palamute Amiibo",
+          "default": "Keypad1"
+        },
+        "scan_amiibo_palico": {
+          "$id": "#/properties/hotkeys/properties/scan_amiibo_palico",
+          "$ref": "#/definitions/key",
+          "title": "Scan Palico Amiibo",
+          "default": "Keypad2"
         }
       }
     },

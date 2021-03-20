@@ -518,9 +518,9 @@ namespace Ryujinx.Configuration
             Hid.Hotkeys.Value = new KeyboardHotkeys
             {
                 ToggleVsync = Key.Tab,
-                ScanAmiiboMagnamalo = Key.F24,
-                ScanAmiiboPalamute = Key.F23,
-                ScanAmiiboPalico = Key.F22
+                ScanAmiiboMagnamalo = Key.Keypad0,
+                ScanAmiiboPalamute = Key.Keypad1,
+                ScanAmiiboPalico = Key.Keypad2
             };
             Hid.InputConfig.Value = new List<InputConfig>
             {
@@ -803,6 +803,21 @@ namespace Ryujinx.Configuration
                 Common.Logging.Logger.Warning?.Print(LogClass.Application, $"Outdated configuration version {configurationFileFormat.Version}, migrating to version 22.");
 
                 configurationFileFormat.HideCursorOnIdle = false;
+
+                configurationFileUpdated = true;
+            }
+
+            if (configurationFileFormat.Version < 23)
+            {
+                Common.Logging.Logger.Warning?.Print(LogClass.Application, $"Outdated configuration version {configurationFileFormat.Version}, migrating to version 23.");
+
+                configurationFileFormat.Hotkeys = new KeyboardHotkeys
+                {
+                    ToggleVsync = Key.Tab,
+                    ScanAmiiboMagnamalo = Key.F24,
+                    ScanAmiiboPalamute = Key.F23,
+                    ScanAmiiboPalico = Key.F22
+                };
 
                 configurationFileUpdated = true;
             }
