@@ -116,15 +116,15 @@ namespace Ryujinx.Ui
                 buttons |= HotkeyButtons.ScanAmiiboMagnamalo;
             }
 
-            if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalamute])
-            {
-                buttons |= HotkeyButtons.ScanAmiiboPalamute;
-            }
+            //if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalamute])
+            //{
+            //    buttons |= HotkeyButtons.ScanAmiiboPalamute;
+            //}
 
-            if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalico])
-            {
-                buttons |= HotkeyButtons.ScanAmiiboPalico;
-            }
+            //if (keyboard[(Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalico])
+            //{
+            //    buttons |= HotkeyButtons.ScanAmiiboPalico;
+            //}
 
             return buttons;
         }
