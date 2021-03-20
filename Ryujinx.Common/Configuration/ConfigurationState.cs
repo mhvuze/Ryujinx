@@ -525,7 +525,10 @@ namespace Ryujinx.Configuration
             Hid.EnableKeyboard.Value               = false;
             Hid.Hotkeys.Value = new KeyboardHotkeys
             {
-                ToggleVsync = Key.Tab
+                ToggleVsync = Key.Tab,
+                ScanAmiiboMagnamalo = Key.F24,
+                ScanAmiiboPalamute = Key.F23,
+                ScanAmiiboPalico = Key.F22
             };
             Hid.InputConfig.Value = new List<InputConfig>
             {
