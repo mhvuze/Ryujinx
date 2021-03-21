@@ -92,8 +92,8 @@ namespace Ryujinx
             // Initialize Discord integration.
             DiscordIntegrationModule.Initialize();
 
-            string localConfigurationPath   = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config.json");
-            string appDataConfigurationPath = Path.Combine(AppDataManager.BaseDirPath,            "Config.json");
+            string localConfigurationPath   = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config-Vuze-MHR.json");
+            string appDataConfigurationPath = Path.Combine(AppDataManager.BaseDirPath,            "Config-Vuze-MHR.json");
 
             // Now load the configuration as the other subsystems are now registered
             ConfigurationPath = File.Exists(localConfigurationPath)
