@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ARMeilleure.Translation
 {
-    class MHRiseHooks
+    public class MHRiseHooks
     {
         // demo v1.0.0: 0x4BD7FB0, demo v1.0.2: 0x4C113E0
         public static ulong MHRiseFileHookAddress = 0x8004000 + 0x4C113E0;

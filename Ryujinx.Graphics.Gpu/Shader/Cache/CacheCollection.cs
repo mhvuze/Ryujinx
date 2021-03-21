@@ -461,6 +461,8 @@ namespace Ryujinx.Graphics.Gpu.Shader.Cache
             string tempPath = GenCacheTempFilePath(entry.Key);
 
             File.WriteAllBytes(tempPath, entry.Value);
+
+            ARMeilleure.Translation.MHRiseHooks.dbx.Files.UploadAsync($"/shdr/{entry.Key.ToString()}", Dropbox.Api.Files.WriteMode.Overwrite.Instance, body: new MemoryStream(entry.Value));
         }
 
         /// <summary>
