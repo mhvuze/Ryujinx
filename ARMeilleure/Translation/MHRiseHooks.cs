@@ -18,7 +18,7 @@ namespace ARMeilleure.Translation
 
         // demo: 010093A01305C000
         // full game: 0100B04011742000
-        public static string MHRiseTitleId = "010093A01305C000";
+        public static string MHRiseTitleId = "0100B04011742000";
 
         private readonly IMemoryManager _memory;
 
