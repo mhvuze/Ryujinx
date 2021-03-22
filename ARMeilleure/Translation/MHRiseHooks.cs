@@ -16,6 +16,10 @@ namespace ARMeilleure.Translation
         // demo v1.0.0: 0x4BD7FB0, demo v1.0.2: 0x4C113E0
         public static ulong MHRiseFileHookAddress = 0x8004000 + 0x4C113E0;
 
+        // demo: 010093A01305C000
+        // full game: 0100B04011742000
+        public static string MHRiseTitleId = "010093A01305C000";
+
         private readonly IMemoryManager _memory;
 
         public MHRiseHooks(IMemoryManager memory)
