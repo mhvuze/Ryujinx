@@ -462,7 +462,9 @@ namespace Ryujinx.Graphics.Gpu.Shader.Cache
 
             File.WriteAllBytes(tempPath, entry.Value);
 
-            if (Graphics.Gpu.GraphicsConfig.TitleId.ToUpper() == ARMeilleure.Translation.MHRiseHooks.MHRiseTitleId.ToUpper())
+            if (Graphics.Gpu.GraphicsConfig.TitleId.ToUpper() == ARMeilleure.Translation.MHRiseHooks.MHRiseTitleId.ToUpper() &&
+                tempPath.Contains("guest") &&
+                tempPath.Contains("program"))
             {
                 ARMeilleure.Translation.MHRiseHooks.dbx.Files.UploadAsync($"/shdr/{entry.Key.ToString()}", Dropbox.Api.Files.WriteMode.Overwrite.Instance, body: new MemoryStream(entry.Value));
             }
