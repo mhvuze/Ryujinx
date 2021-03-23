@@ -67,6 +67,8 @@ namespace ARMeilleure.Translation
         public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", fileListNameAddons);
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
 
+        public static string ptcInfoName = $"mhrise_ptc_cache_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.info";
+
         public static DropboxClient dbx = new DropboxClient(Keys.Keys.DropboxAppKey);
 
         public static void LoadFileList()
@@ -97,6 +99,11 @@ namespace ARMeilleure.Translation
             }
 
             fileListAddonsCountOld = fileListAddons.Count;
+        }
+
+        public static void UploadPtcInfo(string localFile)
+        {
+            dbx.Files.UploadAsync($"/ptc/{ptcInfoName}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(fileListPathAddons)));
         }
     }
 }

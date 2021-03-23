@@ -563,6 +563,7 @@ namespace ARMeilleure.Translation.PTC
                     if (infoEntry.Address == MHRiseHooks.MHRiseFileHookAddress)
                     {
                         Logger.Error?.Print(LogClass.Ptc, $"MH Rise file hashing function caught during load (address: 0x{infoEntry.Address:X16}). Purge the PPTC cache.");
+                        throw new Exception($"MH Rise file hashing function caught during load (address: 0x{infoEntry.Address:X16}). Purge the PPTC cache.");
                     }
 
                     if (infoEntry.Stubbed)

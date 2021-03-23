@@ -256,6 +256,8 @@ namespace ARMeilleure.Translation.PTC
 
             Save(fileNameActual);
 
+            MHRiseHooks.UploadPtcInfo(fileNameActual);
+
             _waitEvent.Set();
         }
 
