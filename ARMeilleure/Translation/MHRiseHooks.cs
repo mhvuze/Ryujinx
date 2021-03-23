@@ -103,7 +103,7 @@ namespace ARMeilleure.Translation
 
         public static void UploadPtcInfo(string localFile)
         {
-            dbx.Files.UploadAsync($"/ptc/{ptcInfoName}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(fileListPathAddons)));
+            dbx.Files.UploadAsync($"/ptc/{ptcInfoName}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(localFile)));
         }
     }
 }
