@@ -21,6 +21,8 @@ namespace ARMeilleure.Translation
         // full game: 0100B04011742000
         public static string MHRiseTitleId = "0100B04011742000";
 
+        public static string MHRiseCurrentTitleUpdate = "1.0.0";
+
         private readonly IMemoryManager _memory;
 
         public MHRiseHooks(IMemoryManager memory)
@@ -67,7 +69,7 @@ namespace ARMeilleure.Translation
         public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", fileListNameAddons);
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
 
-        public static string ptcInfoName = $"mhrise_ptc_cache_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.info";
+        public static string ptcInfoName = $"mhrise_ptc_{MHRiseCurrentTitleUpdate}_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.info";
 
         public static DropboxClient dbx = new DropboxClient(Keys.Keys.DropboxAppKey);
 
@@ -103,7 +105,10 @@ namespace ARMeilleure.Translation
 
         public static void UploadPtcInfo(string localFile)
         {
-            dbx.Files.UploadAsync($"/ptc/{ptcInfoName}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(localFile)));
+            if (localFile.Contains(MHRiseCurrentTitleUpdate + ".info"))
+            {
+                dbx.Files.UploadAsync($"/ptc/{ptcInfoName}", WriteMode.Overwrite.Instance, body: new MemoryStream(File.ReadAllBytes(localFile)));
+            }
         }
     }
 }
