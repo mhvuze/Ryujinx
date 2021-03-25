@@ -65,11 +65,11 @@ namespace ARMeilleure.Translation
         public static int fileListAddonsCountOld = 0;
 
         public static string fileListPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", "mhrise.list");
-        public static string fileListNameAddons = $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.txt";
+        public static string fileListNameAddons = $"mhrise_new_{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}.txt";
         public static string fileListPathAddons = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise", fileListNameAddons);
         public static DirectoryInfo logDir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mhrise"));
 
-        public static string ptcInfoName = $"mhrise_ptc_{MHRiseCurrentTitleUpdate}_{DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss")}.info";
+        public static string ptcInfoName = $"mhrise_ptc_{MHRiseCurrentTitleUpdate}_{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}.info";
 
         public static DropboxClient dbx = new DropboxClient(Keys.Keys.DropboxAppKey);
 
