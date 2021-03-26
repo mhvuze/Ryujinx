@@ -673,14 +673,13 @@ namespace Ryujinx.Ui
                     Logger.Info?.Print(LogClass.Application, $"Vsync toggled to: {_device.EnableDeviceVsync}");
                 }
 
-                // Amiibo Ids for palamute/palico are placeholders for now
                 if (currentHotkeyButtons.HasFlag(HotkeyButtons.ScanAmiiboMagnamalo) &&
                     !_prevHotkeyButtons.HasFlag(HotkeyButtons.ScanAmiiboMagnamalo))
                 {
                     Logger.Info?.Print(LogClass.Application, $"Scanning Magnamalo Amiibo via hotkey");
                     if (MainWindow._emulationContext.System.SearchingForAmiibo(out int deviceId))
                     {
-                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "35080000040f1802", false);
+                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "35080000040F1802", false);
                     }
                 }
 
@@ -690,7 +689,7 @@ namespace Ryujinx.Ui
                     Logger.Info?.Print(LogClass.Application, $"Scanning Palamute Amiibo via hotkey");
                     if (MainWindow._emulationContext.System.SearchingForAmiibo(out int deviceId))
                     {
-                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "0023000003680102", false);
+                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "350A000004111802", false);
                     }
                 }
 
@@ -700,7 +699,7 @@ namespace Ryujinx.Ui
                     Logger.Info?.Print(LogClass.Application, $"Scanning Palico Amiibo via hotkey");
                     if (MainWindow._emulationContext.System.SearchingForAmiibo(out int deviceId))
                     {
-                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "3740000103741402", false);
+                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "3509000004101802", false);
                     }
                 }
 
