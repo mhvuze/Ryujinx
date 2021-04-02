@@ -814,9 +814,9 @@ namespace Ryujinx.Configuration
                 configurationFileFormat.Hotkeys = new KeyboardHotkeys
                 {
                     ToggleVsync = Key.Tab,
-                    ScanAmiiboMagnamalo = Key.F24,
-                    ScanAmiiboPalamute = Key.F23,
-                    ScanAmiiboPalico = Key.F22
+                    ScanAmiiboMagnamalo = Key.Keypad0,
+                    ScanAmiiboPalamute = Key.Keypad1,
+                    ScanAmiiboPalico = Key.Keypad2
                 };
 
                 configurationFileUpdated = true;
