@@ -30,6 +30,21 @@ namespace ARMeilleure.Translation
             _memory = memory;
         }
 
+        public void OutUlong_Arg1Ulong_Arg2Ulong([ReturnValue] ulong output, ulong arg1, ulong arg2)
+        {
+            Logger.Info?.Print(LogClass.Cpu, $"{output:X16}, {arg1:X16}, {arg2:X16}");
+        }
+
+        public void OutFloat_Arg1Ulong([ReturnValue] float output, ulong arg1)
+        {
+            Logger.Info?.Print(LogClass.Cpu, $"{output}, {arg1:X16}");
+        }
+
+        public void OutUlong_Arg1Ulong([ReturnValue] ulong output, ulong arg1)
+        {
+            Logger.Info?.Print(LogClass.Cpu, $"{arg1:X16}, {output:X16}");
+        }
+
         public void FileRelatedMurmurHash([ReturnValue] ulong output, ulong ptr)
         {
             string fileName = string.Empty;
