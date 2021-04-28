@@ -15,14 +15,14 @@ namespace ARMeilleure.Translation
     {
         // base: 0x8004000
         // demo v1.0.0 offset: 0x4BD7FB0, demo v1.0.2 offset: 0x4C113E0
-        // full 1.0.0: 0x4B4F0F0, full 1.1.1: 0x4BE8084, full 1.1.2: 0x4BE8BE4
-        public static ulong MHRiseFileHookAddress = 0x8004000 + 0x4BE8BE4;
+        // full 1.0.0: 0x4B4F0F0, full 1.1.1: 0x4BE8084, full 1.1.2: 0x4BE8BE4, full 2.0.0: 0x4C13E34
+        public static ulong MHRiseFileHookAddress = 0x8004000 + 0x4C13E34;
 
         // demo: 010093A01305C000
         // full game: 0100B04011742000
         public static string MHRiseTitleId = "0100B04011742000";
 
-        public static string MHRiseCurrentTitleUpdate = "1.1.2";
+        public static string MHRiseCurrentTitleUpdate = "2.0.0";
 
         private readonly IMemoryManager _memory;
 
