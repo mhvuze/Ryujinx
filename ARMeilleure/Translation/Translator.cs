@@ -544,7 +544,8 @@ namespace ARMeilleure.Translation
                 funcDlg = BuildWatcher(null, meth, instance);
             }
 
-            TranslatedFunction func = new TranslatedFunction(funcDlg, 0UL, true, true);
+            Counter<uint> callCounter = null; // needs checks, just used to make the project compile
+            TranslatedFunction func = new TranslatedFunction(funcDlg, callCounter, 0UL, true, true);
 
             _funcs.AddOrUpdate(address, func, (key, oldFunc) => func);
         }
