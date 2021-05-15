@@ -4,6 +4,7 @@ using Gdk;
 using Gtk;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
+using Ryujinx.Common.Logging;
 using Ryujinx.Configuration;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.HLE.HOS.Services.Hid;
@@ -500,6 +501,36 @@ namespace Ryujinx.Ui
                     Device.EnableDeviceVsync = !Device.EnableDeviceVsync;
                 }
 
+                else if (currentHotkeyState.HasFlag(KeyboardHotkeyState.ScanAmiiboMagnamalo) &&
+                    !_prevHotkeyState.HasFlag(KeyboardHotkeyState.ScanAmiiboMagnamalo))
+                {
+                    Logger.Info?.Print(LogClass.Application, $"Scanning Magnamalo Amiibo via hotkey");
+                    if (MainWindow._emulationContext.System.SearchingForAmiibo(out int deviceId))
+                    {
+                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "35080000040F1802", false);
+                    }
+                }
+
+                else if (currentHotkeyState.HasFlag(KeyboardHotkeyState.ScanAmiiboPalamute) &&
+                    !_prevHotkeyState.HasFlag(KeyboardHotkeyState.ScanAmiiboPalamute))
+                {
+                    Logger.Info?.Print(LogClass.Application, $"Scanning Palamute Amiibo via hotkey");
+                    if (MainWindow._emulationContext.System.SearchingForAmiibo(out int deviceId))
+                    {
+                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "350A000004111802", false);
+                    }
+                }
+
+                else if (currentHotkeyState.HasFlag(KeyboardHotkeyState.ScanAmiiboPalico) &&
+                    !_prevHotkeyState.HasFlag(KeyboardHotkeyState.ScanAmiiboPalico))
+                {
+                    Logger.Info?.Print(LogClass.Application, $"Scanning Palicos Amiibo via hotkey");
+                    if (MainWindow._emulationContext.System.SearchingForAmiibo(out int deviceId))
+                    {
+                        MainWindow._emulationContext.System.ScanAmiibo(deviceId, "3509000004101802", false);
+                    }
+                }
+
                 _prevHotkeyState = currentHotkeyState;
             }
 
@@ -573,7 +604,10 @@ namespace Ryujinx.Ui
         private enum KeyboardHotkeyState
         {
             None,
-            ToggleVSync
+            ToggleVSync = 1 << 0,
+            ScanAmiiboMagnamalo = 1 << 1,
+            ScanAmiiboPalamute = 1 << 2,
+            ScanAmiiboPalico = 1 << 3
         }
 
         private KeyboardHotkeyState GetHotkeyState()
@@ -583,6 +617,21 @@ namespace Ryujinx.Ui
             if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ToggleVsync))
             {
                 state |= KeyboardHotkeyState.ToggleVSync;
+            }
+            
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboMagnamalo))
+            {
+                state |= KeyboardHotkeyState.ScanAmiiboMagnamalo;
+            }
+            
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalamute))
+            {
+                state |= KeyboardHotkeyState.ScanAmiiboPalamute;
+            }
+            
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.ScanAmiiboPalico))
+            {
+                state |= KeyboardHotkeyState.ScanAmiiboPalico;
             }
 
             return state;
